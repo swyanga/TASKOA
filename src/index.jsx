@@ -8,7 +8,7 @@ import './index.less';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <ConfigProvider locale={zhCN}>
-        <Task />
-    </ConfigProvider>
+  <ConfigProvider locale={zhCN}>
+    <Task />
+  </ConfigProvider>
 );

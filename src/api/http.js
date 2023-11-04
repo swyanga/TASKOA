@@ -21,3 +21,6 @@ http.interceptors.response.use(
   }
 )
 export default http
+
+
+// init

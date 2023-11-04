@@ -1,9 +1,71 @@
 import React from "react";
+import { Button, Popconfirm, Table, Tag } from "antd";
 import './Task.less';
-import { Button, Tag } from "antd";
+
+// 对日期处理的方法
+const zero = function zero(text) {
+  text = String(text);
+  return text.length < 2 ? '0' + text : text;
+};
+const formatTime = function formatTime(time) {
+  let arr = time.match(/\d+/g),
+    [, month, day, hours = '00', minutes = '00'] = arr;
+  return `${zero(month)}-${zero(day)} ${zero(hours)}:${zero(minutes)}`;
+};
 
 class Task extends React.Component {
+
+  // 定义表格列的数据
+  columns = [{
+    title: '编号',
+    dataIndex: 'id',
+    align: "center",
+    width: "8%"
+  }, {
+    title: '任务描述',
+    dataIndex: 'task',
+    ellipsis: true,
+    width: "50%"
+  }, {
+    title: '状态',
+    dataIndex: 'state',
+    align: "center",
+    width: "10%",
+    render: text => +text === 1 ? '未完成' : '已完成'
+  }, {
+    title: '完成时间',
+    dataIndex: 'time',
+    align: "center",
+    width: "18%",
+    render: (_, record) => {
+      let { state, time, complete } = record;
+      if (+state === 2) time = complete;
+      return formatTime(time);
+    }
+  }, {
+    "title": '操作',
+    render(_, record) {
+      let { state } = record;
+      return <>
+        <Popconfirm title="您确定要删除此任务吗？" onConfirm={() => { }}>
+          <Button type="link">删除</Button>
+        </Popconfirm>
+
+        {+state !== 2 ? <Popconfirm title="您确定要把此任务设置为完成吗？"
+          onConfirm={() => { }}>
+          <Button type="link">完成</Button>
+        </Popconfirm> : null}
+      </>
+    }
+  }]
+
+  // 初始组件的状态
+  state = {
+    tableData: [],
+    tableLoading: false
+  }
   render() {
+    let { tableData, tableLoading } = this.state;
     return <div className="task-box">
       {/* 头部 */}
       <div className="header">
@@ -19,8 +81,11 @@ class Task extends React.Component {
       </div>
 
       {/* 表格 */}
+      <Table dataSource={tableData} columns={this.columns}
+        loading={tableLoading} pagination={false} rowKey="id" />˝
 
       {/* 对话框 & 表单 */}
+
     </div>
   }
 }

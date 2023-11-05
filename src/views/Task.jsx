@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Popconfirm, Table, Tag } from "antd";
+import { Modal, Button, Popconfirm, Table, Tag, Form, Input, DatePicker } from "antd";
 import './Task.less';
 
 // 对日期处理的方法
@@ -62,15 +62,38 @@ class Task extends React.Component {
   // 初始组件的状态
   state = {
     tableData: [],
-    tableLoading: false
+    tableLoading: false,
+    modalVisible: false,
+    confirmLoading: false,
+    ruleForm: {
+      task: '',
+      time: ''
+    }
+  };
+
+  // 对话框和表单处理
+  // 关闭对话框 & 清除表单中的内容
+  closeModal = () => {
+    this.setState({
+      modalVisible: false
+    })
   }
+  // 新增任务
+  submit = () => {
+
+  }
+
   render() {
-    let { tableData, tableLoading } = this.state;
+    let { tableData, tableLoading, modalVisible, confirmLoading } = this.state;
     return <div className="task-box">
       {/* 头部 */}
       <div className="header">
         <h2 className="title">TASKOA 任务管理系统</h2>
-        <Button type="primary">新增任务</Button>
+        <Button type="primary" onClick={() => {
+          this.setState({
+            modalVisible: true
+          })
+        }}>新增任务</Button>
       </div>
 
       {/* 标签 */}
@@ -85,11 +108,54 @@ class Task extends React.Component {
         loading={tableLoading} pagination={false} rowKey="id" />˝
 
       {/* 对话框 & 表单 */}
+      <Modal
+        title="新增任务窗口"
+        open={modalVisible}
+        confirmLoading={confirmLoading}
+        keyboard={false}
+        maskClosable={false} okText="确认提交"
+        onCancel={this.closeModal}
+        onOk={this.submit}
+      >
+        <Form>
+          <Form.Item>
+            <Input.TextArea
+              rows={4}
+              value={this.state.ruleForm.task}
+              onChange={ev => {
+                let target = ev.target,
+                  text = target.value.trim();
+                this.setState({
+                  ruleForm: {
+                    ...this.state.ruleForm,
+                    task: text
+                  }
+                })
+              }}
+            ></Input.TextArea>
+          </Form.Item>
 
+          <Form.Item>
+            <DatePicker
+              showTime
+              value={this.state.ruleForm.time}
+              onChange={value => {
+                // value：获取的是当前选中的日期「dayjs日期对象」
+                this.setState({
+                  ruleForm: {
+                    ...this.state.ruleForm,
+                    time: value
+                  }
+                })
+              }}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   }
 }
 
 export default Task;
 
-// init
+// init 

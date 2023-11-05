@@ -5,10 +5,12 @@ import Task from './views/Task';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import './index.less';
+// import Demo from './views/Demo'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ConfigProvider locale={zhCN}>
     <Task />
+    {/* <Demo /> */}
   </ConfigProvider>
 );

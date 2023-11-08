@@ -16,11 +16,9 @@ http.interceptors.response.use(
     return response.data
   },
   (reason) => {
+    // 网络层失败：统一提示
     message.error('当前网络繁忙，请您稍后再试~')
     return Promise.reject(reason)
   }
 )
 export default http
-
-
-// init
